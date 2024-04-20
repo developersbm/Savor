@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import UserMenu from './screens/components/UserMenu';
 
 // Screens
 import HomeScreen from './screens/HomeScreen';
@@ -14,44 +15,101 @@ const scannerName = "Scanner";
 const geminiName = "Gemini";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 function MainContainer() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName={geminiName}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let rn = route.name;
+    <Tab.Navigator
+      initialRouteName={scannerName}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          let rn = route.name;
 
-            if (rn === homeName) {
-              iconName = focused ? 'home' : 'home-outline';
+          if (rn === homeName) {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (rn === scannerName) {
+            iconName = focused ? 'camera' : 'camera-outline';
+          } else if (rn === geminiName) {
+            iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
+          }
 
-            } else if (rn === scannerName) {
-              iconName = focused ? 'camera' : 'camera-outline';
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: 'green',
+        inactiveTintColor: 'black',
+        labelStyle: { paddingTop: 5, fontSize: 15 },
+        style: { padding: 10, height: 200, paddingBottom: 30 }
+      }}
+    >
+      <Tab.Screen name={homeName} component={HomeStackNavigator} />
+      <Tab.Screen name={scannerName} component={ScannerStackNavigator} />
+      <Tab.Screen name={geminiName} component={GeminiStackNavigator} />
+    </Tab.Navigator>
+  );
+}
 
-            } else if (rn === geminiName) {
-              iconName = focused ? 'chatbox-ellipses-outline' : 'chatbox-ellipses-outline';
-            }
 
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'green',
-          inactiveTintColor: 'grey',
-          labelStyle: { paddingBottom: 10, fontSize: 15 },
-          style: { padding: 10, height: 90, paddingBottom: 30}
-        }}>
+function HomeStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={homeName}
+        component={HomeScreen}
+        options={{
+          headerLeft: () => (
+            <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
+          ),
+          headerRight: () => (
+            <UserMenu /> 
+          )
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
-        <Tab.Screen name={homeName} component={HomeScreen} />
-        <Tab.Screen name={scannerName} component={ScannerScreen} />
-        <Tab.Screen name={geminiName} component={GeminiScreen} />
+function ScannerStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={scannerName}
+        component={ScannerScreen}
+        options={{
+          headerLeft: () => (
+            <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
+          ),
+          headerRight: () => (
+            <UserMenu /> 
+          )
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
-      </Tab.Navigator>
-    </NavigationContainer>
+function GeminiStackNavigator() {
+  return (
+    <Stack.Navigator
+    >
+      <Stack.Screen
+        name={geminiName}
+        
+        component={GeminiScreen}
+        options={
+          
+          {
+          headerLeft: () => (
+            <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
+          ),
+          headerRight: () => (
+            <UserMenu />
+          ),
+        }}
+      />
+    </Stack.Navigator>
   );
 }
 
