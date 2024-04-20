@@ -5,7 +5,7 @@ const port = 3000
 
 const { getApp, getApps, initializeApp } = require('firebase/app')
 const { getFirestore, collection, doc, deleteField, addDoc, updateDoc, setDoc, getDoc } = require('firebase/firestore')
-const { getAuth } = require('firebase/auth')
+const { getAuth, onAuthStateChanged } = require('firebase/auth')
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,7 +22,14 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore()
 const auth = getAuth()
 
-const userID = auth.currentUser.uid
+const user = auth.currentUser
+const userID = "TEST"
+if(user){
+     userID = user.uid
+} else {
+    console.log("NO CURRENT USER")
+}
+
 application.use(express.json())
 
 application.get('/', (req, res) => {
