@@ -18,8 +18,10 @@ export const SignupScreen = ({ navigation }) => {
   const handleSignup = async (values) => {
     const { email, password } = values;
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigation.navigate('MainContainer'); // Adjust this as needed
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid;
+      console.log('User ID:', userId); 
+      navigation.navigate('MainContainer'); 
     } catch (error) {
       setErrorState(error.message);
     }

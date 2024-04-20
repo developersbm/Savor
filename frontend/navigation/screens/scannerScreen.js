@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Button, Modal } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ProductInfoCard from './components/ProductInfoCard';
 import { Ionicons } from '@expo/vector-icons';
+import { firebase } from '@react-native-firebase/app';
+import firestore from '@react-native-firebase/firestore';
 
 export default function ScannerScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -10,13 +12,11 @@ export default function ScannerScreen({ navigation }) {
   const [productInfo, setProductInfo] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const askForCameraPermission = async () => {
-    const { status } = await BarCodeScanner.requestPermissionsAsync();
-    setHasPermission(status === 'granted');
-  };
-
   useEffect(() => {
-    askForCameraPermission();
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
   }, []);
 
   const fetchProductInfo = async (barcodeID) => {
@@ -46,43 +46,41 @@ export default function ScannerScreen({ navigation }) {
 
   async function fetchItemData(ean) {
     try {
-        const response = await axios.get(`https://api.upcitemdb.com/prod/trial/lookup?upc=${ean}`);
-        const data = response.data;
-        return data;
+      const response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${ean}`);
+      const data = await response.json();
+      return data;
     } catch (error) {
-        console.error('Error fetching item data:', error);
-        throw error;
+      console.error('Error fetching item data:', error);
+      throw error;
     }
-}
+  }
 
-  async function handleSubmit() {
-    const ean = document.getElementById('eanInput').value;
+  async function handleSubmit(scannedData) {
+    const ean = scannedData;
     try {
-        const itemData = await fetchItemData(ean);
+      const itemData = await fetchItemData(ean);
 
-        const { title, category, images } = itemData?.items[0] || {};
-        if (title && category && images) {
-            const itemTitle = title;
-            const itemInfo = { category, images };
-            const user = doc(db, 'Users', userID);
-            const userGet = await getDoc(user);
-            if (!userGet.exists()) {
-                await setDoc(user, {
-                    [itemTitle]: itemInfo
-                });
-            } else {
-                await updateDoc(user, {
-                    [itemTitle]: itemInfo
-                });
-            }
-            console.log('Data stored in Firestore');
-        } else {
-            console.error('Invalid item data received from API');
-        }
+      const { title, category, images } = itemData?.items[0] || {};
+      if (title && category && images) {
+        const itemTitle = title;
+        const itemInfo = { category, images };
+        const userID = firebase.auth().currentUser.uid;
+        const userRef = firestore().collection('Users').doc(userID);
+
+        await userRef.set(
+          {
+            [itemTitle]: itemInfo
+          },
+          { merge: true } 
+        );
+        console.log('Data stored in Firestore');
+      } else {
+        console.error('Invalid item data received from API');
+      }
     } catch (error) {
-        console.error('Error processing form submission:', error);
+      console.error('Error processing form submission:', error);
     }
-}
+  }
 
   const handleCancel = () => {
     console.log("Product not wanted");
@@ -122,7 +120,7 @@ export default function ScannerScreen({ navigation }) {
           <View style={styles.modalContent}>
             {productInfo && <ProductInfoCard productInfo={productInfo} />}
             <View style={styles.modalButtons}>
-              <Ionicons name="checkmark-circle-outline" size={32} color="green" onPress={handleSubmit} style={styles.modalIcon} />
+              <Ionicons name="checkmark-circle-outline" size={32} color="green" onPress={() => handleSubmit(productInfo.barcode)} style={styles.modalIcon} />
               <Ionicons name="close-circle-outline" size={32} color="red" onPress={handleCancel} style={styles.modalIcon} />
             </View>
           </View>
