@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
-import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth } from './../../config';
 import { loginValidationSchema } from '../../utils';
@@ -11,17 +11,17 @@ export const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async (values) => {
     const { email, password } = values;
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        
-        navigation.navigate('MainContainer');
-      })
-      .catch((error) => {
-        // If there's an error, set the error state
-        setErrorState(error.message);
-        // Consider logging the error for debugging
-        console.log(error);
-      });
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("UserID:", user.uid); // Print UserID
+      navigation.navigate('MainContainer');
+    } catch (error) {
+      // If there's an error, set the error state
+      setErrorState(error.message);
+      // Consider logging the error for debugging
+      console.log(error);
+    }
   };
 
   return (
