@@ -29,7 +29,7 @@ application.get('/', (req, res) => {
 })
 
 application.post('/add', async (req, res) => {
-    const { category, expiration, image, title } =  req.body
+    const { calories, category, expiration, image, title } =  req.body
     const product = doc(db, 'Item', title)
     const productGet = await getDoc(product)
     if (!productGet.exists()){
@@ -37,14 +37,17 @@ application.post('/add', async (req, res) => {
             Category : category,
             Expiration : expiration,
             Img : image,
-            Title : title
+            Title : title,
+            Calories : calories
         })
     } else{
         await updateDoc(product, {
             Category : category,
             Expiration : expiration,
             Img : image,
-            Title : title
+            Title : title,
+            Calories : calories
+
         })
     } 
 
