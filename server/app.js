@@ -23,7 +23,7 @@ const db = getFirestore()
 const auth = getAuth()
 
 const user = auth.currentUser
-const userID = "TEST"
+let userID = "TEST"
 if(user){
      userID = user.uid
 } else {
