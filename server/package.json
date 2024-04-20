@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^4.19.2",
+    "express-http-to-https": "^1.1.4",
     "firebase": "^10.11.0"
   },
   "name": "server",
