@@ -20,27 +20,23 @@ export default function HomeScreen({ navigation }) {
         ] }
     ]);
     const [activeCategory, setActiveCategory] = useState(categories[0].name);
-
-    const openLink = (link) => {
-        Linking.openURL(link);
-    };
-
+    
     const renderCards = () => {
         const activeCategoryProducts = categories.find(category => category.name === activeCategory).products;
         return activeCategoryProducts.map((product, index) => {
             return (
-                <TouchableOpacity key={index} style={styles.card} onPress={() => openLink(product.link)}>
+                <View style={styles.card} key={index}>
                     <Image source={{ uri: product.image }} style={styles.cardImage} />
                     <View style={styles.cardInfo}>
                         <Text style={styles.cardText}>{product.name}</Text>
                         <Text style={styles.cardCategory}>{product.category}</Text>
                     </View>
-                </TouchableOpacity>
+                </View>
             );
         });
     };
     
-
+    
     return (
         <View>
             <View style={styles.category}>
@@ -64,7 +60,7 @@ export default function HomeScreen({ navigation }) {
                     })}
                 </ScrollView>
             </View>
-
+    
             <View style={styles.container}>
                 <View style={styles.section}>
                     {renderCards()}
@@ -72,6 +68,7 @@ export default function HomeScreen({ navigation }) {
             </View>
         </View>
     );
+    
 }
 
 const styles = StyleSheet.create({
@@ -88,7 +85,7 @@ const styles = StyleSheet.create({
         width: '45%',
         backgroundColor: '#fff',
         marginBottom: 20,
-        borderRadius: 10,
+        height: 260,
         borderWidth: 1,
         borderColor: '#ddd',
         alignItems: 'center',
@@ -100,7 +97,6 @@ const styles = StyleSheet.create({
     cardInfo: {
         padding: 10,
         width: '100%',
-        alignItems: 'center',
     },
     cardText: {
         fontSize: 18,
