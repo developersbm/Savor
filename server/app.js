@@ -21,14 +21,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore()
 const auth = getAuth()
-const user = auth.currentUser
-const userID = "TEST"
-
-if(user){
-     userID = user.uid
-} else {
-    console.log("NO CURRENT USER")
-}
 
 application.use(express.json())
 
@@ -37,16 +29,22 @@ application.get('/', (req, res) => {
 })
 
 application.post('/add', async (req, res) => {
-    const { itemTitle, itemInfo } =  req.body
-    const user = doc(db, 'Users', userID)
-    const userGet = await getDoc(user)
-    if (!userGet.exists()){
-        await setDoc(user, {
-            [itemTitle] : itemInfo
+    const { category, expiration, image, title } =  req.body
+    const product = doc(db, 'Item', title)
+    const productGet = await getDoc(product)
+    if (!productGet.exists()){
+        await setDoc(product, {
+            Category : category,
+            Expiration : expiration,
+            Img : image,
+            Title : title
         })
     } else{
-        await updateDoc(user, {
-            [itemTitle] : itemInfo
+        await updateDoc(product, {
+            Category : category,
+            Expiration : expiration,
+            Img : image,
+            Title : title
         })
     } 
 
