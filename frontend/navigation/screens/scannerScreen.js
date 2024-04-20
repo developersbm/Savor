@@ -44,10 +44,45 @@ export default function ScannerScreen({ navigation }) {
     console.log('Type: ' + type + '\nData: ' + data);
   };
 
-  const handleSubmit = () => {
-    console.log("Product wanted");
-    setModalVisible(false);
-  };
+  async function fetchItemData(ean) {
+    try {
+        const response = await axios.get(`https://api.upcitemdb.com/prod/trial/lookup?upc=${ean}`);
+        const data = response.data;
+        return data;
+    } catch (error) {
+        console.error('Error fetching item data:', error);
+        throw error;
+    }
+}
+
+  async function handleSubmit() {
+    const ean = document.getElementById('eanInput').value;
+    try {
+        const itemData = await fetchItemData(ean);
+
+        const { title, category, images } = itemData?.items[0] || {};
+        if (title && category && images) {
+            const itemTitle = title;
+            const itemInfo = { category, images };
+            const user = doc(db, 'Users', userID);
+            const userGet = await getDoc(user);
+            if (!userGet.exists()) {
+                await setDoc(user, {
+                    [itemTitle]: itemInfo
+                });
+            } else {
+                await updateDoc(user, {
+                    [itemTitle]: itemInfo
+                });
+            }
+            console.log('Data stored in Firestore');
+        } else {
+            console.error('Invalid item data received from API');
+        }
+    } catch (error) {
+        console.error('Error processing form submission:', error);
+    }
+}
 
   const handleCancel = () => {
     console.log("Product not wanted");
