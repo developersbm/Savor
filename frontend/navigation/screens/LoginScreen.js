@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 
 import { auth } from './../../config';
 import { loginValidationSchema } from '../../utils';
@@ -9,11 +9,11 @@ import { loginValidationSchema } from '../../utils';
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
 
-  const handleLogin = (values) => {
+  const handleLogin = async (values) => {
     const { email, password } = values;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Navigate to MainContainer only when login is successful
+        
         navigation.navigate('MainContainer');
       })
       .catch((error) => {
