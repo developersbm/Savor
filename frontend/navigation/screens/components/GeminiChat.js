@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-    View,
     Text,
     TouchableOpacity,
     FlatList,
@@ -16,60 +15,61 @@ const GeminiChat = () => {
     const [chat, setChat] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [names, setNames] = useState(["hello", "milk"]); // Array of names
+    const [names, setNames] = useState(["hello", "milk", "Kevin does a flip"]); // Array of names
 
     const API_KEY = "AIzaSyDEx0_Ic0ocOySgKLHA2ZEyh9RZ-QwpRio";
 
-    const initialPrompt = {
-        role: "user",
-        parts: [{ text: "Build a recipe based on this array:" }],
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const dataFromDb = names;
+            console.log("Data from DB:", dataFromDb);
+        };
+      
+        fetchData();
+    }, [names]);
 
-    const updatedChat = [initialPrompt];
-    
     const handleUserInput = async () => {
         setLoading(true);
-    
-        for (const name of names) {
-            try {
-                const updatedChat = [
-                    ...chat,
+
+        try {
+            const dataFromDb = names.join(" "); 
+            const updatedChat = [
+                ...chat,
+                {
+                    role: "user",
+                    parts: [{ text: dataFromDb }],
+                },
+            ];
+
+            const response = await axios.post(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+                {
+                    contents: updatedChat,
+                }
+            );
+
+            const modelResponse =
+                response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+            if (modelResponse) {
+                const updatedChatWithModel = [
+                    ...updatedChat,
                     {
-                        role: "user",
-                        parts: [{ text: name }],
+                        role: "model",
+                        parts: [{ text: modelResponse }],
                     },
                 ];
-    
-                const response = await axios.post(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
-                    {
-                        contents: updatedChat,
-                    }
-                );
-    
-                const modelResponse =
-                    response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    
-                if (modelResponse) {
-                    const updatedChatWithModel = [
-                        ...updatedChat,
-                        {
-                            role: "model",
-                            parts: [{ text: modelResponse }],
-                        },
-                    ];
-    
-                    setChat(updatedChatWithModel);
-                }
-            } catch (error) {
-                console.error("Error calling Gemini Pro API: ", error);
-                console.error("Error response: ", error.response);
+
+                setChat(updatedChatWithModel);
             }
+        } catch (error) {
+            console.error("Error calling Gemini Pro API: ", error);
+            console.error("Error response: ", error.response);
+            setError("Error calling Gemini Pro API");
         }
-    
+
         setLoading(false);
     };
-    
 
     const renderChatItem = ({ item }) => (
         <ChatBubble
