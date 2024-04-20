@@ -78,7 +78,7 @@ application.get('/getItems', async (req, res) => {
         itemsData.push(itemDoc.data())
     })
 
-    res.status(200).json(itemsData)
+    res.status(200).send(itemsData)
 })
 
 application.get('/getItemTitles', async (req, res) => {
