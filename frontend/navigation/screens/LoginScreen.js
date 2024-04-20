@@ -9,10 +9,15 @@ import { loginValidationSchema } from '../../utils';
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
 
-  const handleLogin = (values) => {
+  const handleLogin = async (values) => {
     const { email, password } = values;
-    signInWithEmailAndPassword(auth, email, password)
-      .catch((error) => setErrorState(error.message));
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid; 
+      console.log('User ID:', userId);
+    } catch (error) {
+      setErrorState(error.message);
+    }
   };
 
   return (
