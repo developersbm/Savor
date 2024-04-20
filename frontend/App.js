@@ -6,6 +6,8 @@ import MainContainer from './navigation/mainContainer';
 import { LoginScreen } from './navigation/screens/LoginScreen';
 import { SignupScreen } from './navigation/screens/SignupScreen';
 import SplashScreen from './navigation/screens/SplashScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import UserMenu from './navigation/screens/components/UserMenu';
 
 const Stack = createStackNavigator();
 
@@ -14,9 +16,10 @@ export default function App() {
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Splash">
+        <Stack.Navigator  initialRouteName="Splash"> 
           <Stack.Screen 
             name="Splash" 
+            
             component={SplashScreen} 
             options={{ headerShown: false }}
           />
@@ -33,9 +36,20 @@ export default function App() {
           <Stack.Screen 
             name="MainContainer" 
             component={MainContainer} 
-            options={{ headerShown: false }}
+            options={
+              {
+                headerTitle: '', 
+              headerLeft: () => (
+                <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
+              ),
+              headerRight: () => (
+                <UserMenu />
+              ),
+              
+            }}
           />
         </Stack.Navigator>
+        
       </NavigationContainer>
     </>
   );

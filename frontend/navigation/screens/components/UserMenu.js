@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
+
 const UserMenu = () => {
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -15,7 +17,7 @@ const UserMenu = () => {
     };
 
   return (
-    <View style={styles.container}>
+    <View   style={styles.container}>
       <TouchableOpacity onPress={toggleMenu}>
         <Ionicons name="person" size={30} color="black" style={styles.icon} />
       </TouchableOpacity>

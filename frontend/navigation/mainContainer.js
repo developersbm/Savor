@@ -3,13 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import UserMenu from './screens/components/UserMenu';
-
-// Screens
 import HomeScreen from './screens/HomeScreen';
 import ScannerScreen from './screens/scannerScreen';
 import GeminiScreen from './screens/GeminiScreen';
 
-// Screen names
 const homeName = "Home";
 const scannerName = "Scanner";
 const geminiName = "Gemini";
@@ -21,22 +18,18 @@ function MainContainer() {
   return (
     <Tab.Navigator
       initialRouteName={scannerName}
-      screenOptions={
-        ({ route }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          let rn = route.name;
-
-          if (rn === homeName) {
+          if (route.name === homeName) {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (rn === scannerName) {
+          } else if (route.name === scannerName) {
             iconName = focused ? 'camera' : 'camera-outline';
-          } else if (rn === geminiName) {
+          } else if (route.name === geminiName) {
             iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
           }
-
           return <Ionicons name={iconName} size={size} color={color} />;
-        },
+        }
       })}
       tabBarOptions={{
         activeTintColor: 'green',
@@ -45,72 +38,10 @@ function MainContainer() {
         style: { padding: 10, height: 200, paddingBottom: 30 }
       }}
     >
-      <Tab.Screen name={homeName} component={HomeStackNavigator} />
-      <Tab.Screen name={scannerName} component={ScannerStackNavigator} />
-      <Tab.Screen name={geminiName} component={GeminiStackNavigator} />
+      <Tab.Screen name={homeName} component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name={scannerName} component={ScannerScreen} options={{ headerShown: false }} />
+      <Tab.Screen name={geminiName} component={GeminiScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
-  );
-}
-
-
-function HomeStackNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={homeName}
-        component={HomeScreen}
-        options={{
-          headerLeft: () => (
-            <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
-          ),
-          headerRight: () => (
-            <UserMenu /> 
-          )
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ScannerStackNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={scannerName}
-        component={ScannerScreen}
-        options={{
-          headerLeft: () => (
-            <Ionicons name="logo-react" size={20} color="black" style={{ marginLeft: 10 }} />
-          ),
-          headerRight: () => (
-            <UserMenu /> 
-          )
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function GeminiStackNavigator() {
-  return (
-    <Stack.Navigator
-    >
-      <Stack.Screen
-        name={geminiName}
-        
-        component={GeminiScreen}
-        options={
-          
-          {
-          headerLeft: () => (
-            <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
-          ),
-          headerRight: () => (
-            <UserMenu />
-          ),
-        }}
-      />
-    </Stack.Navigator>
   );
 }
 
