@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainContainer from './navigation/mainContainer';
 import { LoginScreen } from './navigation/screens/LoginScreen';
 import { SignupScreen } from './navigation/screens/SignupScreen';
-import SplashScreen from './navigation/screens/SplashScreen';  // Ensure this import is correct
+import SplashScreen from './navigation/screens/SplashScreen';
 
 const Stack = createStackNavigator();
 
@@ -13,25 +13,26 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
+    
         <Stack.Screen 
           name="Splash" 
           component={SplashScreen} 
-          options={{ headerShown: false }}  // Usually, we don't show headers on splash screens
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Login" 
           component={LoginScreen} 
-          options={{ headerShown: false }}  // Optionally, you can remove the header for the login
+          options={{ headerShown: false }} 
         />
         <Stack.Screen 
           name="Signup" 
           component={SignupScreen} 
-          options={{ headerShown: false }}  // Optionally, you can remove the header for the signup
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="MainContainer" 
           component={MainContainer} 
-          options={{ headerShown: false }}  // Adjust based on your preference for showing header
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

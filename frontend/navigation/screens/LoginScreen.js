@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-import { auth } from './../../config';  // Make sure your Firebase config is correctly set up
+import { auth } from './../../config';
 import { loginValidationSchema } from '../../utils';
 
 export const LoginScreen = ({ navigation }) => {
