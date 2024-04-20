@@ -22,7 +22,7 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore()
 const auth = getAuth()
 
-
+//const userID = auth.currentUser.uid
 application.use(express.json())
 
 application.get('/', (req, res) => {
@@ -31,7 +31,6 @@ application.get('/', (req, res) => {
 
 application.post('/add', async (req, res) => {
     const { userID, itemTitle, itemInfo } =  req.body
-    //const userID = auth.currentUser.uid
     const user = doc(db, 'Users', userID)
 
     try{
@@ -48,7 +47,6 @@ application.post('/add', async (req, res) => {
 
 application.delete('/delete', async (req, res) => {
     const { userID, itemTitle } = req.body
-    //const userID = auth.currentUser.uid
     try{
         const items = doc(db, 'Users', userID)
         let dataUpload = await updateDoc(items, {
@@ -63,7 +61,8 @@ application.delete('/delete', async (req, res) => {
 })
 
 application.get('/getGemini', async (req, res) => {
-    const items = doc(db, 'User', userID)
+    const { userID } = req.body
+    const items = doc(db, 'Users', userID)
     const itemDoc = await getDoc(items)
     if (itemDoc.exists()){
         res.status(200).send(itemDoc.data())
