@@ -1,25 +1,45 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Linking } from 'react-native';
-import { dataBase } from './dataBase';
 
 export default function HomeScreen({ navigation }) {
-    const [categories, setCategories] = useState(dataBase.categories); 
+
+    const exampleImage = "https://i5.walmartimages.com/asr/a308e2f8-68d9-46fe-aab3-87de3f09e6d4_1.dc3154bdb9655e531ae9f414af2a8e5e.png?odnHeight=450&odnWidth=450&odnBg=ffffff";
+    const [categories, setCategories] = useState([
+        { name: "Pantry", products: [
+            { name: "Cookies", category: "Sweets", image: exampleImage, link: "cookie_link_url" },
+            { name: "Chips", category: "Snacks", image:exampleImage, link: "chips_link_url" }
+        ] },
+        { name: "Freezer", products: [
+            { name: "Frozen berries", category: "Frozen Fruits", image: exampleImage, link: "berries_link_url" }
+        ] },
+        { name: "Fridge", products: [
+            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
+            { name: "Eggs", category: "Dairy", image: exampleImage, link: "eggs_link_url" },
+            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
+            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
+        ] }
+    ]);
     const [activeCategory, setActiveCategory] = useState(categories[0].name);
+
+    const openLink = (link) => {
+        Linking.openURL(link);
+    };
 
     const renderCards = () => {
         const activeCategoryProducts = categories.find(category => category.name === activeCategory).products;
         return activeCategoryProducts.map((product, index) => {
             return (
-                <View style={styles.card} key={index}>
+                <TouchableOpacity key={index} style={styles.card} onPress={() => openLink(product.link)}>
                     <Image source={{ uri: product.image }} style={styles.cardImage} />
                     <View style={styles.cardInfo}>
                         <Text style={styles.cardText}>{product.name}</Text>
                         <Text style={styles.cardCategory}>{product.category}</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
             );
         });
     };
+
 
     return (
         <View>
@@ -68,7 +88,7 @@ const styles = StyleSheet.create({
         width: '45%',
         backgroundColor: '#fff',
         marginBottom: 20,
-        height: 260,
+        borderRadius: 10,
         borderWidth: 1,
         borderColor: '#ddd',
         alignItems: 'center',
@@ -80,6 +100,7 @@ const styles = StyleSheet.create({
     cardInfo: {
         padding: 10,
         width: '100%',
+        alignItems: 'center',
     },
     cardText: {
         fontSize: 18,
