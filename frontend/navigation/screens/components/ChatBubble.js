@@ -10,13 +10,13 @@ const ChatBubble = ({ role, text, onSpeech }) => {
                 role === "user" ? styles.userChatItem : styles.modelChatItem,
             ]}
         >
-         <Text style={styles.chatText}>{text}</Text>
-         {role === "model" && (
-            <TouchableOpacity onPress={onSpeech} style={styles.speakerIcon}>
-                <Ionicons name="volume-high-outline" size={24} color="#fff" />
-            </TouchableOpacity>
-         )}
-         </View>
+            <Text style={styles.chatText}>{text}</Text>
+            {role === "model" && (
+                <TouchableOpacity onPress={onSpeech} style={styles.speakerIcon}>
+                    <Ionicons name="volume-high-outline" size={24} color="#fff" />
+                </TouchableOpacity>
+            )}
+        </View>
     );
 };
 
@@ -25,20 +25,21 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding: 10,
         borderRadius: 10,
-        maxWidht: "70%",
+        maxWidth: "100%",
         position: "relative",
     },
     userChatItem: {
         alignSelf: "flex-end",
-        backgroundColor: "#007AFF"
+        backgroundColor: "#4CAF50",
     },
     modelChatItem: {
         alignSelf: "flex-start",
         backgroundColor: "#000",
     },
     chatText: {
-        fontSize: 16,
+        fontSize: 20,
         color: "#fff",
+        fontFamily: "Arial",
     },
     speakerIcon: {
         position: "absolute",

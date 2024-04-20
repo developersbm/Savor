@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import GeminiChat from './components/GeminiChat';
 
 
-export default function SettingsScreen({ navigation }) {
+export default function GeminiScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <GeminiChat />

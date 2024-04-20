@@ -5,13 +5,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // Screens
 import HomeScreen from './screens/HomeScreen';
 import ScannerScreen from './screens/scannerScreen';
-import SettingsScreen from './screens/SettingScreen';
- // Note: ensure LoginScreen is used appropriately if needed here
+import GeminiScreen from './screens/GeminiScreen';
 
 // Screen names
 const homeName = "Home";
 const scannerName = "Scanner";
-const settingsName = "Settings";
+const geminiName = "Gemini";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,8 +27,8 @@ function MainContainer() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (rn === scannerName) {
             iconName = focused ? 'list' : 'list-outline';
-          } else if (rn === settingsName) {
-            iconName = focused ? 'settings' : 'settings-outline';
+          } else if (rn === geminiName) {
+            iconName = focused ? 'chatbox-ellipses-outline' : 'chatbox-ellipses-outline';
           }
 
           // You can return any component that you like here!
@@ -37,15 +36,15 @@ function MainContainer() {
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-        labelStyle: { paddingBottom: 10, fontSize: 10 },
-        style: { padding: 10, height: 60}
+        activeTintColor: 'green',
+        inactiveTintColor: 'grey',
+        labelStyle: { paddingBottom: 10, fontSize: 15 },
+        style: { padding: 10, height: 90, paddingBottom:30}
       }}
     >
       <Tab.Screen name={homeName} component={HomeScreen} />
       <Tab.Screen name={scannerName} component={ScannerScreen} />
-      <Tab.Screen name={settingsName} component={SettingsScreen} />
+      <Tab.Screen name={geminiName} component={geminiName} />
     </Tab.Navigator>
   );
 }
