@@ -4,6 +4,8 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import ProductInfoCard from './components/ProductInfoCard';
 import { Ionicons } from '@expo/vector-icons';
 
+const dataBase = [];
+
 export default function ScannerScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -44,48 +46,34 @@ export default function ScannerScreen({ navigation }) {
     console.log('Type: ' + type + '\nData: ' + data);
   };
 
-  async function fetchItemData(ean) {
+  const handleSubmit = () => {
     try {
-        const response = await axios.get(`https://api.upcitemdb.com/prod/trial/lookup?upc=${ean}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.error('Error fetching item data:', error);
-        throw error;
-    }
-}
-
-  async function handleSubmit() {
-    const ean = document.getElementById('eanInput').value;
-    try {
-        const itemData = await fetchItemData(ean);
-
-        const { title, category, images } = itemData?.items[0] || {};
-        if (title && category && images) {
-            const itemTitle = title;
-            const itemInfo = { category, images };
-            const user = doc(db, 'Users', userID);
-            const userGet = await getDoc(user);
-            if (!userGet.exists()) {
-                await setDoc(user, {
-                    [itemTitle]: itemInfo
-                });
-            } else {
-                await updateDoc(user, {
-                    [itemTitle]: itemInfo
-                });
-            }
-            console.log('Data stored in Firestore');
-        } else {
+      if (productInfo && productInfo.items && productInfo.items.length > 0) {
+        const { items } = productInfo;
+        items.forEach(item => {
+          const { title, category, images, offers } = item;
+          if (title && category && images && offers && offers.length > 0) {
+            const newItem = { name: title, category: category, image: images[0], link: offers[0].link };
+            dataBase.push(newItem);
+            console.log('Item added to the database:', newItem);
+          } else {
             console.error('Invalid item data received from API');
-        }
+          }
+        });
+        console.log('Updated dataBase:', dataBase);
+      } else {
+        console.error('No product information available');
+      }
     } catch (error) {
-        console.error('Error processing form submission:', error);
+      console.error('Error processing form submission:', error);
     }
-}
+    setModalVisible(false);
+  };
+  
 
   const handleCancel = () => {
     console.log("Product not wanted");
+    console.log('Current dataBase:', dataBase);
     setModalVisible(false);
   };
 
