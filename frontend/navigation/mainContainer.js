@@ -44,7 +44,7 @@ function MainContainer() {
     >
       <Tab.Screen name={homeName} component={HomeScreen} />
       <Tab.Screen name={scannerName} component={ScannerScreen} />
-      <Tab.Screen name={geminiName} component={geminiName} />
+      <Tab.Screen name={geminiName} component={GeminiScreen} />
     </Tab.Navigator>
   );
 }
