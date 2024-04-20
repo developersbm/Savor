@@ -8,7 +8,7 @@ import ScannerScreen from './screens/scannerScreen';
 import GeminiScreen from './screens/GeminiScreen';
 
 const homeName = "Home";
-const scannerName = "Scanner";
+const scannerName = "Add";
 const geminiName = "Gemini";
 
 const Tab = createBottomTabNavigator();

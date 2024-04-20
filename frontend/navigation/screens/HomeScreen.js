@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ddd',
         alignItems: 'center',
+        height: 260,
     },
     cardImage: {
         width: '100%',

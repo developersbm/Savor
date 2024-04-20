@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import { Image, StatusBar } from 'react-native';
+import logo from '../../../assets/profile.png';
 
 
 const UserMenu = () => {
@@ -19,7 +20,10 @@ const UserMenu = () => {
   return (
     <View   style={styles.container}>
       <TouchableOpacity onPress={toggleMenu}>
-        <Ionicons name="person" size={30} color="black" style={styles.icon} />
+      <Image
+        source={logo}
+        style={{ width: 100, height: 40, resizeMode: 'contain' }}
+      />
       </TouchableOpacity>
       {menuVisible && (
         <View style={styles.dropdown}>

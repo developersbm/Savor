@@ -8,6 +8,10 @@ import { SignupScreen } from './navigation/screens/SignupScreen';
 import SplashScreen from './navigation/screens/SplashScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import UserMenu from './navigation/screens/components/UserMenu';
+import { Image } from 'react-native';
+import logo from '../frontend/assets/logo.jpeg';
+
+
 
 const Stack = createStackNavigator();
 
@@ -40,7 +44,9 @@ export default function App() {
               {
                 headerTitle: '', 
               headerLeft: () => (
-                <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
+                <Image source={logo}
+                 style={{ width: 100, height: 40, resizeMode: 'cover' }}
+      />
               ),
               headerRight: () => (
                 <UserMenu />

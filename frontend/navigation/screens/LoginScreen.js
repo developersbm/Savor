@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet,TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth } from './../../config';
 import { loginValidationSchema } from '../../utils';
+
+
+
+
 
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -13,13 +17,10 @@ export const LoginScreen = ({ navigation }) => {
     const { email, password } = values;
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log("UserID:", user.uid); // Print UserID
+      console.log("UserID:", userCredential.user.uid); // Print UserID
       navigation.navigate('MainContainer');
     } catch (error) {
-      // If there's an error, set the error state
       setErrorState(error.message);
-      // Consider logging the error for debugging
       console.log(error);
     }
   };
@@ -53,12 +54,18 @@ export const LoginScreen = ({ navigation }) => {
             />
             {touched.password && errors.password && <Text>{errors.password}</Text>}
             {errorState !== '' && <Text>{errorState}</Text>}
-            <Button onPress={handleSubmit} title="Login" />
+            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')} style={styles.button}>
+              <Text style={styles.buttonText}>Create a new account?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('MainContainer')} style={styles.button}>
+              <Text style={styles.buttonText}>Forgot Password</Text>
+            </TouchableOpacity>
           </View>
         )}
       </Formik>
-      <Button title="Create a new account?" onPress={() => navigation.navigate('Signup')} />
-      <Button title="Forgot Password" onPress={() => navigation.navigate('MainContainer')} />
     </View>
   );
 };
@@ -75,12 +82,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    borderRadius: 15,
+    backgroundColor: '#fff',
   },
   screenTitle: {
     fontSize: 24,
     fontWeight: '600',
     color: 'black',
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#4169E1',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
     textAlign: 'center',
   },
 });
