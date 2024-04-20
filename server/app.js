@@ -4,7 +4,7 @@ const application = express()
 const port = 3000
 
 const { getApp, getApps, initializeApp } = require('firebase/app')
-const { getFirestore, collection, doc, deleteField, addDoc, updateDoc, query, getDoc } = require('firebase/firestore')
+const { getFirestore, collection, doc, deleteField, addDoc, updateDoc, setDoc, getDoc } = require('firebase/firestore')
 const { getAuth } = require('firebase/auth')
 
 // Your web app's Firebase configuration
@@ -22,7 +22,7 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore()
 const auth = getAuth()
 
-//const userID = auth.currentUser.uid
+const userID = auth.currentUser.uid
 application.use(express.json())
 
 application.get('/', (req, res) => {
@@ -30,23 +30,24 @@ application.get('/', (req, res) => {
 })
 
 application.post('/add', async (req, res) => {
-    const { userID, itemTitle, itemInfo } =  req.body
+    const { itemTitle, itemInfo } =  req.body
     const user = doc(db, 'Users', userID)
-
-    try{
-        let dataUpload = await updateDoc(user, {
+    const userGet = await getDoc(user)
+    if (!userGet.exists()){
+        await setDoc(user, {
             [itemTitle] : itemInfo
         })
-    } catch (error) {
-        console.error("ERROR: ", error)
-        res.status(500).send("ERROR")
-    }   
+    } else{
+        await updateDoc(user, {
+            [itemTitle] : itemInfo
+        })
+    } 
 
     res.status(200).send("Add Complete")
 })
 
 application.delete('/delete', async (req, res) => {
-    const { userID, itemTitle } = req.body
+    const { itemTitle } = req.body
     try{
         const items = doc(db, 'Users', userID)
         let dataUpload = await updateDoc(items, {
@@ -61,7 +62,6 @@ application.delete('/delete', async (req, res) => {
 })
 
 application.get('/getGemini', async (req, res) => {
-    const { userID } = req.body
     const items = doc(db, 'Users', userID)
     const itemDoc = await getDoc(items)
     if (itemDoc.exists()){
