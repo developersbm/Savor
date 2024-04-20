@@ -12,7 +12,16 @@ export const LoginScreen = ({ navigation }) => {
   const handleLogin = (values) => {
     const { email, password } = values;
     signInWithEmailAndPassword(auth, email, password)
-      .catch((error) => setErrorState(error.message));
+      .then((userCredential) => {
+        // Navigate to MainContainer only when login is successful
+        navigation.navigate('MainContainer');
+      })
+      .catch((error) => {
+        // If there's an error, set the error state
+        setErrorState(error.message);
+        // Consider logging the error for debugging
+        console.log(error);
+      });
   };
 
   return (

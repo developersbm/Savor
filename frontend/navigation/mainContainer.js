@@ -21,7 +21,8 @@ function MainContainer() {
   return (
     <Tab.Navigator
       initialRouteName={scannerName}
-      screenOptions={({ route }) => ({
+      screenOptions={
+        ({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           let rn = route.name;
@@ -79,7 +80,7 @@ function ScannerStackNavigator() {
         component={ScannerScreen}
         options={{
           headerLeft: () => (
-            <Ionicons name="logo-react" size={30} color="black" style={{ marginLeft: 10 }} />
+            <Ionicons name="logo-react" size={20} color="black" style={{ marginLeft: 10 }} />
           ),
           headerRight: () => (
             <UserMenu /> 
