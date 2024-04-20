@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import UserMenu from './screens/components/UserMenu';
 import HomeScreen from './screens/HomeScreen';
 import ScannerScreen from './screens/scannerScreen';
 import GeminiScreen from './screens/GeminiScreen';
