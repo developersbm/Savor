@@ -3,9 +3,9 @@ const express = require('express')
 const application = express()
 const port = 3000
 
-const { getApp, getApps, initializeApp } = require('firebase/app')
-const { getFirestore, collection, doc, deleteField, addDoc, updateDoc, setDoc, getDoc } = require('firebase/firestore')
-const { getAuth, onAuthStateChanged } = require('firebase/auth')
+const { initializeApp } = require('firebase/app')
+const { getFirestore, collection, doc, updateDoc, setDoc, getDoc, getDocs, deleteDoc } = require('firebase/firestore')
+const { getAuth } = require('firebase/auth')
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -52,12 +52,10 @@ application.post('/add', async (req, res) => {
 })
 
 application.delete('/delete', async (req, res) => {
-    const { itemTitle } = req.body
+    const { title } = req.body
     try{
-        const items = doc(db, 'Users', userID)
-        let dataUpload = await updateDoc(items, {
-            [itemTitle] : deleteField()
-        })
+        const product = doc(db, 'Item', title)
+        await deleteDoc(product)
     } catch (error) {
         console.error("ERROR: ", error)
         res.status(500).send("ERROR")
@@ -66,14 +64,28 @@ application.delete('/delete', async (req, res) => {
     res.status(200).send("Delete Complete")
 })
 
-application.get('/getGemini', async (req, res) => {
-    const items = doc(db, 'Users', userID)
-    const itemDoc = await getDoc(items)
-    if (itemDoc.exists()){
-        res.status(200).send(itemDoc.data())
-    } else{
-        res.status(200).send("ERROR")
-    }
+application.get('/getItems', async (req, res) => {
+    const items = collection(db, 'Item')
+    const itemDocs = await getDocs(items)
+    
+    const itemsData = []
+    itemDocs.forEach((itemDoc) => {
+        itemsData.push(itemDoc.data())
+    })
+
+    res.status(200).json(itemsData)
+})
+
+application.get('/getItemTitles', async (req, res) => {
+    const items = collection(db, 'Item')
+    const itemDocs = await getDocs(items)
+
+    const itemTitles = []
+    itemDocs.forEach((itemDoc) => {
+        itemTitles.push(itemDoc.id)
+    })
+    
+    res.status(200).json(itemTitles)
 })
 
 application.listen(port, () => {
