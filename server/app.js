@@ -21,9 +21,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore()
 const auth = getAuth()
-
 const user = auth.currentUser
-let userID = "TEST"
+const userID = "TEST"
+
 if(user){
      userID = user.uid
 } else {
