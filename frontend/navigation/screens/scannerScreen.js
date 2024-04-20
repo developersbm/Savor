@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, Modal } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import ProductInfoCard from './components/ProductInfoCard'; // Assuming you have this component defined
+import ProductInfoCard from './components/ProductInfoCard';
 import { Ionicons } from '@expo/vector-icons';
-import firebase from 'firebase/app';
-import 'firebase/firestore'; // Import Firestore if you are using it
 
 const dataBase = [];
 
@@ -47,40 +45,32 @@ export default function ScannerScreen({ navigation }) {
     fetchProductInfo(data);
     console.log('Type: ' + type + '\nData: ' + data);
   };
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyDPW6O7B_NAZ9XGT3Q87rmVvtVww0rx29c",
-    authDomain: "la-hacks-d7b07.firebaseapp.com",
-    projectId: "la-hacks-d7b07",
-    storageBucket: "la-hacks-d7b07.appspot.com",
-    messagingSenderId: "600374351697",
-    appId: "1:600374351697:web:61953058e4ff05d7282570"
-};
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       if (productInfo && productInfo.items && productInfo.items.length > 0) {
-        const { items } = productInfo;
-        items.forEach(item => {
-          const { title, category, images, offers } = item;
-          if (title && category && images && offers && offers.length > 0) {
-            const newItem = { name: title, category: category, image: images[0], link: offers[0].link };
-            dataBase.push(newItem);
-            console.log('Item added to the database:', newItem);
-          } else {
-            console.error('Invalid item data received from API');
-          }
-        });
-        console.log('Updated dataBase:', dataBase);
-      } else {
-        console.error('No product information available');
-      }
-    } catch (error) {
-      console.error('Error processing form submission:', error);
-    }
-    setModalVisible(false);
-  };
   
+        const dataToSend = {
+          category: productInfo.items[0].category,
+          expiration: null,
+          image: productInfo.items[0].images[0],
+          title: productInfo.items[0].title,
+          calories: null,
+        };
+  
+        const response = await fetch('http://172.31.16.243:3000/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataToSend)
+        });
+        setModalVisible(false);
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  };  
 
   const handleCancel = () => {
     console.log("Product not wanted");
@@ -119,7 +109,7 @@ export default function ScannerScreen({ navigation }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {productInfo && <ProductInfoCard productInfo={productInfo} />} {/* Assuming ProductInfoCard is defined */}
+            {productInfo && <ProductInfoCard productInfo={productInfo} />}
             <View style={styles.modalButtons}>
               <Ionicons name="checkmark-circle-outline" size={32} color="green" onPress={handleSubmit} style={styles.modalIcon} />
               <Ionicons name="close-circle-outline" size={32} color="red" onPress={handleCancel} style={styles.modalIcon} />
@@ -168,3 +158,4 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 });
+
