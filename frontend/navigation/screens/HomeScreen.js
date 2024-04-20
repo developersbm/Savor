@@ -1,26 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Linking } from 'react-native';
+import { dataBase } from './dataBase';
 
 export default function HomeScreen({ navigation }) {
-
-    const exampleImage = "https://i5.walmartimages.com/asr/a308e2f8-68d9-46fe-aab3-87de3f09e6d4_1.dc3154bdb9655e531ae9f414af2a8e5e.png?odnHeight=450&odnWidth=450&odnBg=ffffff";
-    const [categories, setCategories] = useState([
-        { name: "Pantry", products: [
-            { name: "Cookies", category: "Sweets", image: exampleImage, link: "cookie_link_url" },
-            { name: "Chips", category: "Snacks", image:exampleImage, link: "chips_link_url" }
-        ] },
-        { name: "Freezer", products: [
-            { name: "Frozen berries", category: "Frozen Fruits", image: exampleImage, link: "berries_link_url" }
-        ] },
-        { name: "Fridge", products: [
-            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
-            { name: "Eggs", category: "Dairy", image: exampleImage, link: "eggs_link_url" },
-            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
-            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
-        ] }
-    ]);
+    const [categories, setCategories] = useState(dataBase.categories); 
     const [activeCategory, setActiveCategory] = useState(categories[0].name);
-    
+
     const renderCards = () => {
         const activeCategoryProducts = categories.find(category => category.name === activeCategory).products;
         return activeCategoryProducts.map((product, index) => {
@@ -35,8 +20,7 @@ export default function HomeScreen({ navigation }) {
             );
         });
     };
-    
-    
+
     return (
         <View>
             <View style={styles.category}>
@@ -60,7 +44,7 @@ export default function HomeScreen({ navigation }) {
                     })}
                 </ScrollView>
             </View>
-    
+
             <View style={styles.container}>
                 <View style={styles.section}>
                     {renderCards()}
@@ -68,7 +52,6 @@ export default function HomeScreen({ navigation }) {
             </View>
         </View>
     );
-    
 }
 
 const styles = StyleSheet.create({

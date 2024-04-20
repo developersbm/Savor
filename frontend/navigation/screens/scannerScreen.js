@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import firebase from 'firebase/app';
 import 'firebase/firestore'; // Import Firestore if you are using it
 
+const dataBase = [];
+
 export default function ScannerScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -55,44 +57,34 @@ export default function ScannerScreen({ navigation }) {
     appId: "1:600374351697:web:61953058e4ff05d7282570"
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  } else {
-    firebase.app(); // if already initialized, use that one
-  }
-  
-  const firestore = firebase.firestore();
-  
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     try {
       if (productInfo && productInfo.items && productInfo.items.length > 0) {
         const { items } = productInfo;
-        const filteredItems = items.filter(item => item.title && item.images && item.offers && item.offers.length > 0);
-        if (filteredItems.length > 0) {
-          const productData = filteredItems[0];
-
-          const docRef = await firestore.collection('products').add({
-            category: productData.category, 
-            item: productData.title,
-            product: productData, 
-            expiration: null, 
-            imageUrl: productData.images[0].primary,
-          });
-          console.log('Product submitted to Firestore:', docRef.id);
-          setModalVisible(false);
-        } else {
-          console.error('No valid product information available');
-        }
+        items.forEach(item => {
+          const { title, category, images, offers } = item;
+          if (title && category && images && offers && offers.length > 0) {
+            const newItem = { name: title, category: category, image: images[0], link: offers[0].link };
+            dataBase.push(newItem);
+            console.log('Item added to the database:', newItem);
+          } else {
+            console.error('Invalid item data received from API');
+          }
+        });
+        console.log('Updated dataBase:', dataBase);
       } else {
         console.error('No product information available');
       }
     } catch (error) {
-      console.error('Error submitting product to Firestore:', error);
+      console.error('Error processing form submission:', error);
     }
+    setModalVisible(false);
   };
+  
 
   const handleCancel = () => {
     console.log("Product not wanted");
+    console.log('Current dataBase:', dataBase);
     setModalVisible(false);
   };
 
