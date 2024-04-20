@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, Modal } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import ProductInfoCard from './components/ProductInfoCard';
+import ProductInfoCard from './components/ProductInfoCard'; // Assuming you have this component defined
 import { Ionicons } from '@expo/vector-icons';
+import firebase from 'firebase/app';
+import 'firebase/firestore'; // Import Firestore if you are using it
 
 export default function ScannerScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -43,46 +45,51 @@ export default function ScannerScreen({ navigation }) {
     fetchProductInfo(data);
     console.log('Type: ' + type + '\nData: ' + data);
   };
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyDPW6O7B_NAZ9XGT3Q87rmVvtVww0rx29c",
+    authDomain: "la-hacks-d7b07.firebaseapp.com",
+    projectId: "la-hacks-d7b07",
+    storageBucket: "la-hacks-d7b07.appspot.com",
+    messagingSenderId: "600374351697",
+    appId: "1:600374351697:web:61953058e4ff05d7282570"
+};
 
-  async function fetchItemData(ean) {
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  } else {
+    firebase.app(); // if already initialized, use that one
+  }
+  
+  const firestore = firebase.firestore();
+  
+  const handleSubmit = async () => {
     try {
-        const response = await axios.get(`https://api.upcitemdb.com/prod/trial/lookup?upc=${ean}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.error('Error fetching item data:', error);
-        throw error;
-    }
-}
+      if (productInfo && productInfo.items && productInfo.items.length > 0) {
+        const { items } = productInfo;
+        const filteredItems = items.filter(item => item.title && item.images && item.offers && item.offers.length > 0);
+        if (filteredItems.length > 0) {
+          const productData = filteredItems[0];
 
-  async function handleSubmit() {
-    const ean = document.getElementById('eanInput').value;
-    try {
-        const itemData = await fetchItemData(ean);
-
-        const { title, category, images } = itemData?.items[0] || {};
-        if (title && category && images) {
-            const itemTitle = title;
-            const itemInfo = { category, images };
-            const user = doc(db, 'Users', userID);
-            const userGet = await getDoc(user);
-            if (!userGet.exists()) {
-                await setDoc(user, {
-                    [itemTitle]: itemInfo
-                });
-            } else {
-                await updateDoc(user, {
-                    [itemTitle]: itemInfo
-                });
-            }
-            console.log('Data stored in Firestore');
+          const docRef = await firestore.collection('products').add({
+            category: productData.category, 
+            item: productData.title,
+            product: productData, 
+            expiration: null, 
+            imageUrl: productData.images[0].primary,
+          });
+          console.log('Product submitted to Firestore:', docRef.id);
+          setModalVisible(false);
         } else {
-            console.error('Invalid item data received from API');
+          console.error('No valid product information available');
         }
+      } else {
+        console.error('No product information available');
+      }
     } catch (error) {
-        console.error('Error processing form submission:', error);
+      console.error('Error submitting product to Firestore:', error);
     }
-}
+  };
 
   const handleCancel = () => {
     console.log("Product not wanted");
@@ -120,7 +127,7 @@ export default function ScannerScreen({ navigation }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {productInfo && <ProductInfoCard productInfo={productInfo} />}
+            {productInfo && <ProductInfoCard productInfo={productInfo} />} {/* Assuming ProductInfoCard is defined */}
             <View style={styles.modalButtons}>
               <Ionicons name="checkmark-circle-outline" size={32} color="green" onPress={handleSubmit} style={styles.modalIcon} />
               <Ionicons name="close-circle-outline" size={32} color="red" onPress={handleCancel} style={styles.modalIcon} />
