@@ -11,13 +11,17 @@ export const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async (values) => {
     const { email, password } = values;
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const userId = userCredential.user.uid; 
-      console.log('User ID:', userId);
-    } catch (error) {
-      setErrorState(error.message);
-    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        
+        navigation.navigate('MainContainer');
+      })
+      .catch((error) => {
+        // If there's an error, set the error state
+        setErrorState(error.message);
+        // Consider logging the error for debugging
+        console.log(error);
+      });
   };
 
   return (
