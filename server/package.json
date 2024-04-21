@@ -1,8 +1,11 @@
 {
   "dependencies": {
+    "axios": "^1.6.8",
     "express": "^4.19.2",
     "express-http-to-https": "^1.1.4",
-    "firebase": "^10.11.0"
+    "firebase": "^10.11.0",
+    "firebase-admin": "^12.1.0",
+    "node-cron": "^3.0.3"
   },
   "name": "server",
   "version": "1.0.0",
