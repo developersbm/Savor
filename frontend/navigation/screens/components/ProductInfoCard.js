@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
-const ProductInfoCard = ({ productInfo }) => {
+const ProductInfoCard = ({ productInfo, updateExpirationValue, onSubmit, expirationValue }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (text) => {
     setInputValue(text);
+    updateExpirationValue(text);
   };
 
   const handleSubmit = () => {
-    console.log("Submitted value:", inputValue);
+    onSubmit(inputValue); // Use inputValue instead of expirationValue
   };
 
   const renderExpirationDate = () => {
@@ -45,7 +46,7 @@ const ProductInfoCard = ({ productInfo }) => {
         />
         <Button
           title="Submit"
-          onPress={handleSubmit}
+          onPress={handleSubmit} // Call handleSubmit
         />
       </View>
     </TouchableWithoutFeedback>

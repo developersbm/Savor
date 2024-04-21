@@ -4,22 +4,21 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import ProductInfoCard from './components/ProductInfoCard';
 import { Ionicons } from '@expo/vector-icons';
 
-const dataBase = [];
-
-export default function ScannerScreen({ navigation }) {
+const ScannerScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [productInfo, setProductInfo] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [expirationValue, setExpirationValue] = useState(null);
+
+  useEffect(() => {
+    askForCameraPermission();
+  }, []);
 
   const askForCameraPermission = async () => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
     setHasPermission(status === 'granted');
   };
-
-  useEffect(() => {
-    askForCameraPermission();
-  }, []);
 
   const fetchProductInfo = async (barcodeID) => {
     try {
@@ -49,10 +48,9 @@ export default function ScannerScreen({ navigation }) {
   const handleSubmit = async () => {
     try {
       if (productInfo && productInfo.items && productInfo.items.length > 0) {
-  
         const dataToSend = {
           category: productInfo.items[0].category,
-          expiration: null,
+          expiration: expirationValue, 
           image: productInfo.items[0].images[0],
           title: productInfo.items[0].title,
         };
@@ -69,11 +67,10 @@ export default function ScannerScreen({ navigation }) {
     } catch(error) {
       console.log(error);
     }
-  };  
+  };   
 
   const handleCancel = () => {
     console.log("Product not wanted");
-    console.log('Current dataBase:', dataBase);
     setModalVisible(false);
   };
 
@@ -108,7 +105,14 @@ export default function ScannerScreen({ navigation }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {productInfo && <ProductInfoCard productInfo={productInfo} />}
+            {productInfo && (
+              <ProductInfoCard 
+                  productInfo={productInfo} 
+                  updateExpirationValue={setExpirationValue} 
+                  onSubmit={handleSubmit} 
+                  expirationValue={expirationValue}
+              />
+            )}
             <View style={styles.modalButtons}>
               <Ionicons name="checkmark-circle-outline" size={32} color="green" onPress={handleSubmit} style={styles.modalIcon} />
               <Ionicons name="close-circle-outline" size={32} color="red" onPress={handleCancel} style={styles.modalIcon} />
@@ -157,3 +161,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 });
+
+export default ScannerScreen;

@@ -18,6 +18,10 @@ export default function HomeScreen({ navigation }) {
         };
 
         fetchData();
+
+        const interval = setInterval(fetchData, 30000);
+
+        return () => clearInterval(interval);
     }, []);
 
     const handlePress = (product) => {
@@ -25,21 +29,20 @@ export default function HomeScreen({ navigation }) {
         setModalVisible(true);
     };
 
-    const getCardColor = (expirationDate) => {
-        if (!expirationDate) return '#fff'; // Default color if no expiration date
-        const expirationTimestamp = new Date(expirationDate).getTime();
-        const currentTimestamp = new Date().getTime();
+    const getCardColors = (expirationDate) => {
+        if (!expirationDate) return { borderColor: '#ddd' };
         
-        if (expirationTimestamp <= 2) {
-            return 'red'; 
-        } else if (expirationTimestamp <= 4) {
-            return 'yellow'; 
-        } else if (expirationTimestamp <= 5) {
-            return 'green'; 
+        if (expirationDate <= 2) {
+            return { borderColor: 'lightred' }; 
+        } else if (expirationDate <= 4) {
+            return { borderColor: 'orange' }; 
+        } else if (expirationDate <= 5) {
+            return { borderColor: 'green' }; 
         } else {
-            return 'white'; 
+            return { borderColor: 'darkgreen' }; 
         }
     };
+    
 
     return (
         <View style={styles.container}>
@@ -48,11 +51,11 @@ export default function HomeScreen({ navigation }) {
                 keyExtractor={(item) => item.Title}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        style={[styles.card, { backgroundColor: getCardColor(item.Expiration) }]}
+                        style={[styles.card, { borderColor: getCardColors(item.Expiration).borderColor }]}
                         onPress={() => handlePress(item)}
                     >
                         <Image source={{ uri: item.Img }} style={styles.cardImage} />
-                        <Text style={styles.cardText}>{item.Title}</Text>
+                        <Text style={[styles.cardText, { color: getCardColors(item.Expiration).nameColor }]}>{item.Title}</Text>
                     </TouchableOpacity>
                 )}
                 numColumns={2}
@@ -91,8 +94,7 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         margin: 5,
-        borderWidth: 1,
-        borderColor: '#ddd',
+        borderWidth: 3,
         borderRadius: 10,
         overflow: 'hidden',
         alignItems: 'center',
