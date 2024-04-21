@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Linking } from 'react-native';
-import axios from 'axios'; // Make sure axios is installed
+import axios from 'axios';
 
 export default function HomeScreen({ navigation }) {
     const [products, setProducts] = useState([]);
@@ -8,8 +8,7 @@ export default function HomeScreen({ navigation }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/getItems');
-                
+                const response = await axios.get('http://10.26.1.168:3000/getItems');
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -19,16 +18,12 @@ export default function HomeScreen({ navigation }) {
         fetchData();
     }, []);
 
-    const openLink = (link) => {
-        Linking.openURL(link);
-    };
-
     return (
         <View style={styles.container}>
             <Text style={styles.screenTitle}>Products</Text>
             <ScrollView style={styles.scrollView}>
                 {products.map((product, index) => (
-                    <TouchableOpacity key={index} style={styles.card} onPress={() => openLink(product.Img)}>
+                    <TouchableOpacity key={index} style={styles.card} /*onPress={() => openLink(product.Img)}*/>
                         <Image source={{ uri: product.Img }} style={styles.cardImage} />
                         <View style={styles.cardInfo}>
                             <Text style={styles.cardText}>{product.Title}</Text>

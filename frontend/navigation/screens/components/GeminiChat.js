@@ -1,43 +1,43 @@
 import React, { useState, useEffect } from "react";
 import {
-    Text,
-    TouchableOpacity,
-    FlatList,
-    ActivityIndicator,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Platform,
-    View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import ChatBubble from "./ChatBubble";
 
 const GeminiChat = () => {
-    const [chat, setChat] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [names, setNames] = useState(["Please do a recipe based on these ingredients:", "milk", "eggs", "flour", "chocolate"]);
+  const [chat, setChat] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const API_KEY = "AIzaSyDEx0_Ic0ocOySgKLHA2ZEyh9RZ-QwpRio";
+  const API_KEY = "AIzaSyDEx0_Ic0ocOySgKLHA2ZEyh9RZ-QwpRio";
 
-    useEffect(() => {
-        fetchData();
-    }, [names]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const fetchData = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const dataFromDb = names;
-            console.log("Data from DB:", dataFromDb);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            setError("Error fetching data");
-        } finally {
-            setLoading(false);
-        }
-    };
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get('http://10.26.1.168:3000/getItems');
+      const dataFromDb = response.data;
+      console.log("Data from DB:", dataFromDb);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("Error fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
     const handleUserInput = async () => {
         setLoading(true);

@@ -29,7 +29,7 @@ application.get('/', (req, res) => {
 })
 
 application.post('/add', async (req, res) => {
-    const { location, calories, category, expiration, image, title } =  req.body
+    const { location, calories, category, expiration, image, title } = req.body
     const product = doc(db, 'Item', title)
     const productGet = await getDoc(product)
     if (!productGet.exists()){

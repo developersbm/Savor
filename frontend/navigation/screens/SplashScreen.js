@@ -19,7 +19,7 @@ const SplashScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Animated.Image 
-                source={require('./../../assets/logo.jpeg')}
+                source={require('./../../assets/logo.png')}
                 style={[styles.logo, { opacity: logoOpacity }]} // Apply animated opacity
             />
         </View>
@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     logo: {
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
     },
 });
 
