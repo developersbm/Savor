@@ -114,7 +114,6 @@ const ScannerScreen = ({ navigation }) => {
               />
             )}
             <View style={styles.modalButtons}>
-              <Ionicons name="checkmark-circle-outline" size={32} color="green" onPress={handleSubmit} style={styles.modalIcon} />
               <Ionicons name="close-circle-outline" size={32} color="red" onPress={handleCancel} style={styles.modalIcon} />
             </View>
           </View>

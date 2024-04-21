@@ -10,7 +10,7 @@ const ProductInfoCard = ({ productInfo, updateExpirationValue, onSubmit, expirat
   };
 
   const handleSubmit = () => {
-    onSubmit(inputValue); // Use inputValue instead of expirationValue
+    onSubmit(inputValue); 
   };
 
   const renderExpirationDate = () => {
@@ -44,10 +44,13 @@ const ProductInfoCard = ({ productInfo, updateExpirationValue, onSubmit, expirat
           keyboardType="numeric"
           placeholder="Enter a number"
         />
+      <View style={{ backgroundColor: 'green', borderRadius: 20, paddingHorizontal: 20 }}>
         <Button
           title="Submit"
-          onPress={handleSubmit} // Call handleSubmit
+          onPress={handleSubmit}
+          color="white"
         />
+      </View>
       </View>
     </TouchableWithoutFeedback>
   );
