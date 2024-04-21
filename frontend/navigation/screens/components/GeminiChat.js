@@ -30,7 +30,7 @@ const GeminiChat = () => {
     setError(null);
     try {
       const response = await axios.get('http://10.26.1.168:3000/getItemTitles');
-      const titles = "Write a clear, step by step recipe using any combination of these ingredients:" 
+      const titles = "Write a clear and simple output. Do NOT use asterics. Divide each section with a line, and create a step by step recipe using any combination of these ingredients: " 
                    + response.data.join(", ");
       setItemTitles(titles);
       console.log("Item Titles:", titles);

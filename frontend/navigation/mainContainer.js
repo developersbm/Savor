@@ -18,7 +18,7 @@ function MainContainer() {
     <Tab.Navigator
       initialRouteName={scannerName}
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color, size, marginTop }) => {
           let iconName;
           if (route.name === homeName) {
             iconName = focused ? 'home' : 'home-outline';
@@ -27,13 +27,13 @@ function MainContainer() {
           } else if (route.name === geminiName) {
             iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} marginTop={marginTop} />;
         }
       })}
       tabBarOptions={{
         activeTintColor: 'green',
         inactiveTintColor: 'black',
-        labelStyle: { paddingTop: 5, fontSize: 15 },
+        labelStyle: { paddingTop: 5, fontSize: 15, marginTop: -13 },
         style: { padding: 10, height: 200, paddingBottom: 30 }
       }}
     >

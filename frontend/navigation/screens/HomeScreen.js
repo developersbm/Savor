@@ -1,9 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import axios from 'axios';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, Image, Linking } from 'react-native';
-
 
 export default function HomeScreen({ navigation }) {
     const [products, setProducts] = useState([]);
@@ -13,7 +10,7 @@ export default function HomeScreen({ navigation }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/getItems');
+                const response = await axios.get('http://10.26.1.168:3000/getItems');
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -21,6 +18,10 @@ export default function HomeScreen({ navigation }) {
         };
 
         fetchData();
+
+        const interval = setInterval(fetchData, 30000);
+
+        return () => clearInterval(interval);
     }, []);
 
     const handlePress = (product) => {
@@ -28,15 +29,33 @@ export default function HomeScreen({ navigation }) {
         setModalVisible(true);
     };
 
+    const getCardColors = (expirationDate) => {
+        if (!expirationDate) return { borderColor: '#ddd' };
+        
+        if (expirationDate <= 2) {
+            return { borderColor: 'lightred' }; 
+        } else if (expirationDate <= 4) {
+            return { borderColor: 'orange' }; 
+        } else if (expirationDate <= 5) {
+            return { borderColor: 'green' }; 
+        } else {
+            return { borderColor: 'darkgreen' }; 
+        }
+    };
+    
+
     return (
         <View style={styles.container}>
             <FlatList
                 data={products}
                 keyExtractor={(item) => item.Title}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.card} onPress={() => handlePress(item)}>
+                    <TouchableOpacity
+                        style={[styles.card, { borderColor: getCardColors(item.Expiration).borderColor }]}
+                        onPress={() => handlePress(item)}
+                    >
                         <Image source={{ uri: item.Img }} style={styles.cardImage} />
-                        <Text style={styles.cardText}>{item.Title}</Text>
+                        <Text style={[styles.cardText, { color: getCardColors(item.Expiration).nameColor }]}>{item.Title}</Text>
                     </TouchableOpacity>
                 )}
                 numColumns={2}
@@ -53,7 +72,6 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.modalView}>
                         <Image source={{ uri: currentProduct?.Img }} style={styles.modalImage} />
                         <Text style={styles.modalText}>Title: {currentProduct?.Title}</Text>
-                        <Text style={styles.modalText}>Calories: {currentProduct?.Calories || 'Not available'}</Text>
                         <Text style={styles.modalText}>Expiration: {currentProduct?.Expiration || 'N/A'}</Text>
                         <TouchableOpacity
                             style={[styles.button, styles.buttonClose]}
@@ -76,11 +94,9 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         margin: 5,
-        borderWidth: 1,
-        borderColor: '#ddd',
+        borderWidth: 3,
         borderRadius: 10,
         overflow: 'hidden',
-        backgroundColor: '#fff',
         alignItems: 'center',
         padding: 10,
         height: 300,

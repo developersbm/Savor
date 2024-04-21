@@ -1,21 +1,55 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, Linking, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TextInput, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
-const ProductInfoCard = ({ productInfo }) => {
-  const openLink = (link) => {
-    Linking.openURL(link);
+const ProductInfoCard = ({ productInfo, updateExpirationValue, onSubmit, expirationValue }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (text) => {
+    setInputValue(text);
+    updateExpirationValue(text);
+  };
+
+  const handleSubmit = () => {
+    onSubmit(inputValue); // Use inputValue instead of expirationValue
+  };
+
+  const renderExpirationDate = () => {
+    const expirationDate = new Date(productInfo.items[0].offers[0].expirationDate);
+    const currentDate = new Date();
+
+    if (expirationDate > currentDate) {
+      return (
+        <Text style={styles.expirationText}>
+          Expires on: {expirationDate.toLocaleDateString()}
+        </Text>
+      );
+    } else {
+      return (
+        <Text style={styles.expiredText}>Expiration based on days!</Text>
+      );
+    }
   };
 
   return (
-    <View style={styles.productCard}>
-      <Image source={{ uri: productInfo.items[0].images[0] }} style={styles.productImage} />
-      <Text style={styles.productName}>{productInfo.items[0].title}</Text>
-      <Text style={styles.productCategory}>{productInfo.items[0].category}</Text>
-      <TouchableOpacity style={styles.purchaseButton} onPress={() => openLink(productInfo.items[0].offers[0].link)}>
-        <Text style={styles.purchaseButtonText}>Buy Now</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.productCard}>
+        <Image style={styles.productImage} source={{ uri: productInfo.items[0].images[0] }} />
+        <Text style={styles.productName}>{productInfo.items[0].title}</Text>
+        <Text style={styles.productCategory}>{productInfo.items[0].category}</Text>
+        {renderExpirationDate()}
+        <TextInput
+          style={styles.input}
+          onChangeText={handleInputChange}
+          value={inputValue}
+          keyboardType="numeric"
+          placeholder="Enter a number"
+        />
+        <Button
+          title="Submit"
+          onPress={handleSubmit} // Call handleSubmit
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -41,15 +75,24 @@ const styles = StyleSheet.create({
   productCategory: {
     marginBottom: 10,
   },
-  purchaseButton: {
-    backgroundColor: 'tomato',
-    padding: 10,
-    borderRadius: 5,
+  expirationText: {
+    color: 'green',
+    fontWeight: 'bold',
     marginTop: 10,
   },
-  purchaseButtonText: {
-    color: 'white',
+  expiredText: {
+    color: 'red',
     fontWeight: 'bold',
+    marginTop: 10,
+  },
+  input: {
+    height: 40,
+    width: '80%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    marginTop: 10,
+    paddingHorizontal: 10,
   },
 });
 
