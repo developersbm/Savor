@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Linking } from 'react-native';
-import axios from 'axios'; // Make sure axios is installed
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, Linking } from 'react-native';
+import axios from 'axios'; // Assuming axios is used for API calls
 
 export default function HomeScreen({ navigation }) {
     const [products, setProducts] = useState([]);
@@ -9,7 +9,6 @@ export default function HomeScreen({ navigation }) {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/getItems');
-                
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -19,68 +18,52 @@ export default function HomeScreen({ navigation }) {
         fetchData();
     }, []);
 
-    const openLink = (link) => {
-        Linking.openURL(link);
-    };
+    const renderItem = ({ item }) => (
+        <TouchableOpacity style={styles.card} onPress={() => Linking.openURL(item.link)}>
+            <Image source={{ uri: item.Img }} style={styles.cardImage} />
+            <Text style={styles.cardText}>{item.Title}</Text>
+            
+        </TouchableOpacity>
+    );
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.screenTitle}>Products</Text>
-            <ScrollView style={styles.scrollView}>
-                {products.map((product, index) => (
-                    <TouchableOpacity key={index} style={styles.card} onPress={() => openLink(product.Img)}>
-                        <Image source={{ uri: product.Img }} style={styles.cardImage} />
-                        <View style={styles.cardInfo}>
-                            <Text style={styles.cardText}>{product.Title}</Text>
-                            <Text style={styles.cardCategory}>{product.Category}</Text>
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </View>
+        <FlatList
+            data={products}
+            renderItem={renderItem}
+            keyExtractor={item => item.Title} // Ensure your items have unique titles or use a unique id
+            numColumns={2} // Set the number of columns to 2 for two items per row
+            contentContainerStyle={styles.container}
+        />
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 20,
-        justifyContent: 'center',
-    },
-    scrollView: {
-        marginTop: 20,
+        paddingHorizontal: 10,
     },
     card: {
-        backgroundColor: '#fff',
+        flex: 1,
+        margin: 5,
+        borderWidth: 1,
+        borderColor: '#ddd',
         borderRadius: 10,
-        padding: 10,
-        marginBottom: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3,
+        overflow: 'hidden',
+        backgroundColor: '#fff',
+        alignItems: 'center', // Centering items in the card
+        padding: 10
     },
     cardImage: {
         width: '100%',
-        height: 200,
-        borderRadius: 10,
-    },
-    cardInfo: {
-        padding: 10,
+        height: 100, // Adjust height based on your content
+        resizeMode: 'cover'
     },
     cardText: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
+        paddingVertical: 5,
     },
     cardCategory: {
         fontSize: 14,
-        color: '#666',
-    },
-    screenTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 20,
+        color: 'gray',
     },
 });
