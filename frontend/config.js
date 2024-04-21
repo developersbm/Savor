@@ -1,7 +1,8 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage'; // Import storage module if needed
+const { initializeApp } = require('firebase/app');
+
+const { getAuth } = require('firebase/auth');
+const{ getFirestore } = require( 'firebase/firestore');
+const { getStorage } = require('firebase/storage'); // Import storage module if needed
 
 const firebaseConfig = {
     apiKey: "AIzaSyDPW6O7B_NAZ9XGT3Q87rmVvtVww0rx29c",
@@ -17,4 +18,4 @@ const auth = getAuth(app);
 const db = getFirestore(app);  // Renaming to `db` to match what might be expected elsewhere
 const storage = getStorage(app); // Initialize Firebase Storage, if needed
 
-export { auth, db, storage }; // Adjust exports accordingly
+module.exports = { auth, db, storage };

@@ -4,7 +4,7 @@ const application = express()
 const port = 3000
 
 const { initializeApp } = require('firebase/app')
-const { getFirestore, collection, doc, updateDoc, setDoc, getDoc, getDocs, deleteDoc } = require('../frontend/config')
+const { getFirestore, collection, doc, updateDoc, setDoc, getDoc, getDocs, deleteDoc } = require('firebase/firestore');
 const { getAuth } = require('firebase/auth')
 
 // Your web app's Firebase configuration
