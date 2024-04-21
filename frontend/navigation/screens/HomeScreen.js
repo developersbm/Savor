@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation }) {
         if (!expirationDate) return { borderColor: '#ddd' };
         
         if (expirationDate <= 2) {
-            return { borderColor: 'lightred' }; 
+            return { borderColor: '#FF474D' }; 
         } else if (expirationDate <= 4) {
             return { borderColor: 'orange' }; 
         } else if (expirationDate <= 5) {
