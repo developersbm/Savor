@@ -13,7 +13,7 @@ export default function HomeScreen({ navigation }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/getItems');
+                const response = await axios.get('http://10.26.1.168:3000/getItems');
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching data: ', error);

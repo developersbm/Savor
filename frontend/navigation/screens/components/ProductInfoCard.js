@@ -9,7 +9,7 @@ const ProductInfoCard = ({ productInfo }) => {
 
   return (
     <View style={styles.productCard}>
-      <Image source={{ uri: productInfo.items[0].images[0] }} style={styles.productImage} />
+      <Image style={styles.productImage} source={{ uri: productInfo.items[0].images[0] }} />
       <Text style={styles.productName}>{productInfo.items[0].title}</Text>
       <Text style={styles.productCategory}>{productInfo.items[0].category}</Text>
       <TouchableOpacity style={styles.purchaseButton} onPress={() => openLink(productInfo.items[0].offers[0].link)}>

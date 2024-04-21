@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
+import * as Font from 'expo-font';
 
 const ChatBubble = ({ role, text, onSpeech }) => {
   if (role === "model") {
@@ -25,22 +26,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     backgroundColor: "#fff", 
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 5,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    borderWidth: 4,
+    borderColor: "#696969",
   },
   modelChatItem: {
     alignSelf: "flex-start",
+    backgroundColor: "#DCDCDC",
   },
   chatText: {
     fontSize: 20,
     color: "#000",
-    fontFamily: "Arial",
+    fontFamily: "Calibri",
   },
   speakerIcon: {
     position: "absolute",
