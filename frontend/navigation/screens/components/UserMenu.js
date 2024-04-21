@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../../config'; // Ensure your Firebase auth configuration path is correct
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { auth } from '../../../config';
+import { useNavigation } from '@react-navigation/native';
 
 const UserMenu = () => {
-    const navigation = useNavigation(); // Get navigation object
+    const navigation = useNavigation(); 
     const [menuVisible, setMenuVisible] = useState(false);
 
     const toggleMenu = () => {
