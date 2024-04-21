@@ -4,8 +4,6 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import ProductInfoCard from './components/ProductInfoCard';
 import { Ionicons } from '@expo/vector-icons';
 
-const dataBase = [];
-
 export default function ScannerScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -56,17 +54,18 @@ export default function ScannerScreen({ navigation }) {
           image: productInfo.items[0].images[0],
           title: productInfo.items[0].title,
           calories: null,
+          location: null
         };
   
-        const response = await fetch('http://172.31.16.243:3000/add', {
+        const response = await fetch('http://10.26.1.168:3000/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(dataToSend)
         });
-        setModalVisible(false);
       }
+      setModalVisible(false);
     } catch(error) {
       console.log(error);
     }
@@ -74,7 +73,6 @@ export default function ScannerScreen({ navigation }) {
 
   const handleCancel = () => {
     console.log("Product not wanted");
-    console.log('Current dataBase:', dataBase);
     setModalVisible(false);
   };
 

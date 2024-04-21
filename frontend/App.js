@@ -9,7 +9,7 @@ import SplashScreen from './navigation/screens/SplashScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import UserMenu from './navigation/screens/components/UserMenu';
 import { Image } from 'react-native';
-import logo from '../frontend/assets/logo.jpeg';
+import logo from '../frontend/assets/logo2.png';
 
 
 
@@ -45,7 +45,7 @@ export default function App() {
                 headerTitle: '', 
               headerLeft: () => (
                 <Image source={logo}
-                 style={{ width: 100, height: 40, resizeMode: 'cover' }}
+                 style={{ width: 150, height: 60, resizeMode: 'cover' }}
       />
               ),
               headerRight: () => (
