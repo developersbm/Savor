@@ -1,69 +1,80 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Image, StatusBar } from 'react-native';
-import logo from '../../../assets/profile.png';
-
+import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../config'; // Ensure your Firebase auth configuration path is correct
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const UserMenu = () => {
-  const [menuVisible, setMenuVisible] = useState(false);
+    const navigation = useNavigation(); // Get navigation object
+    const [menuVisible, setMenuVisible] = useState(false);
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
-  };
-
-  const handleMenuItemClick = (item) => {
-    console.log(`Clicked on ${item}`);
-
+    const toggleMenu = () => {
+        setMenuVisible(!menuVisible);
     };
 
-  return (
-    <View   style={styles.container}>
-      <TouchableOpacity onPress={toggleMenu}>
-      <Image
-        source={logo}
-        style={{ width: 100, height: 40, resizeMode: 'contain' }}
-      />
-      </TouchableOpacity>
-      {menuVisible && (
-        <View style={styles.dropdown}>
-          <TouchableOpacity onPress={() => handleMenuItemClick('Settings')}>
-            <Text style={styles.menuItem}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleMenuItemClick('Preferences')}>
-            <Text style={styles.menuItem}>Preferences</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleMenuItemClick('Logout')}>
-            <Text style={styles.menuItem}>Logout</Text>
-          </TouchableOpacity>
-          {/* Add more menu items as needed */}
+    const handleMenuSettings = () => {
+        console.log('Clicked on Settings');
+    };
+
+    const handleMenuPreferences = () => {
+        console.log('Clicked on Preferences');
+    };
+
+    const handleMenuLogOut = async () => {
+        try {
+            await signOut(auth);
+            console.log("Logged out successfully.");
+            navigation.navigate('Login'); // Navigate to the login screen
+        } catch (error) {
+            console.error("Error logging out: ", error);
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity onPress={toggleMenu}>
+                <Image source={require('../../../assets/profile.png')} style={{ width: 100, height: 40, resizeMode: 'contain' }} />
+            </TouchableOpacity>
+            {menuVisible && (
+                <View style={styles.dropdown}>
+                    <TouchableOpacity onPress={handleMenuSettings}>
+                        <Text style={styles.menuItem}>Settings</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleMenuPreferences}>
+                        <Text style={styles.menuItem}>Preferences</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleMenuLogOut}>
+                        <Text style={styles.menuItem2}>Logout</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
-      )}
-    </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    marginRight: 10,
-  },
-  dropdown: {
-    position: 'absolute',
-    top: 50, // Adjust this value based on your UI layout
-    right: 10,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    elevation: 3,
-    padding: 10,
-  },
-  menuItem: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    dropdown: {
+        position: 'absolute',
+        top: 50,
+        right: 10,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        elevation: 3,
+        padding: 10,
+    },
+    menuItem: {
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    menuItem2: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: "red",
+    }
 });
 
 export default UserMenu;

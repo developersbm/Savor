@@ -13,7 +13,7 @@ export const LoginScreen = ({ navigation }) => {
     const { email, password } = values;
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("UserID:", userCredential.user.uid); // Print UserID
+      console.log("UserID:", userCredential.user.uid);
       navigation.navigate('MainContainer');
     } catch (error) {
       setErrorState(error.message);
