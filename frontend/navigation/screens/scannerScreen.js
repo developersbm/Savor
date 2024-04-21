@@ -55,8 +55,6 @@ export default function ScannerScreen({ navigation }) {
           expiration: null,
           image: productInfo.items[0].images[0],
           title: productInfo.items[0].title,
-          calories: null,
-          location: null
         };
   
         const response = await fetch('http://10.26.1.168:3000/add', {
@@ -159,5 +157,3 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 });
-
-

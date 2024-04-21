@@ -1,9 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import axios from 'axios';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, Image, Linking } from 'react-native';
-
 
 export default function HomeScreen({ navigation }) {
     const [products, setProducts] = useState([]);
@@ -28,13 +25,32 @@ export default function HomeScreen({ navigation }) {
         setModalVisible(true);
     };
 
+    const getCardColor = (expirationDate) => {
+        if (!expirationDate) return '#fff'; // Default color if no expiration date
+        const expirationTimestamp = new Date(expirationDate).getTime();
+        const currentTimestamp = new Date().getTime();
+        
+        if (expirationTimestamp <= 2) {
+            return 'red'; 
+        } else if (expirationTimestamp <= 4) {
+            return 'yellow'; 
+        } else if (expirationTimestamp <= 5) {
+            return 'green'; 
+        } else {
+            return 'white'; 
+        }
+    };
+
     return (
         <View style={styles.container}>
             <FlatList
                 data={products}
                 keyExtractor={(item) => item.Title}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.card} onPress={() => handlePress(item)}>
+                    <TouchableOpacity
+                        style={[styles.card, { backgroundColor: getCardColor(item.Expiration) }]}
+                        onPress={() => handlePress(item)}
+                    >
                         <Image source={{ uri: item.Img }} style={styles.cardImage} />
                         <Text style={styles.cardText}>{item.Title}</Text>
                     </TouchableOpacity>
@@ -53,7 +69,6 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.modalView}>
                         <Image source={{ uri: currentProduct?.Img }} style={styles.modalImage} />
                         <Text style={styles.modalText}>Title: {currentProduct?.Title}</Text>
-                        <Text style={styles.modalText}>Calories: {currentProduct?.Calories || 'Not available'}</Text>
                         <Text style={styles.modalText}>Expiration: {currentProduct?.Expiration || 'N/A'}</Text>
                         <TouchableOpacity
                             style={[styles.button, styles.buttonClose]}
@@ -80,7 +95,6 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         borderRadius: 10,
         overflow: 'hidden',
-        backgroundColor: '#fff',
         alignItems: 'center',
         padding: 10,
         height: 300,
