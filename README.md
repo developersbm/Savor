@@ -13,11 +13,11 @@
 - <a href="#frontend">Frontend</a>
 - <a href="#backend">Backend</a>
 
-<a id="Showcase"></a>
+<div id="Showcase"></div>
 
 ## Showcase (Main Website)
 
-<a id="built-with"></a>
+<div id="built-with"></div>
 
 ## Built With
 
@@ -30,7 +30,9 @@
 - ![Gemini AI](https://img.shields.io/badge/Gemini_AI-purple?style=flat-square&logoWidth=40)
 - ![Google Cloud Natural Language](https://img.shields.io/badge/Google_Cloud_Natural_Language-blue?logo=google-cloud&logoColor=white&style=flat-square)
 
-<a id="server"></a>
+<p align="right">(<a href="#readme-top">Back to top</a>)</p>
+
+<div id="server"></div>
 
 ## Starting Server
 
@@ -50,7 +52,9 @@ cd frontend
 npx expo start
 ```
 
-<a id="Authentication"></a>
+<p align="right">(<a href="#readme-top">Back to top</a>)</p>
+
+<div id="Authentication"></div>
 
 ## Authentication & Users
 
@@ -63,7 +67,9 @@ npx expo start
 - User Sign-in grants users the ability to access their accounts with their credentials whilst Firebase verifies their identity and authenticates them.
 - Access Control utilizes Firebase Authentication to enforce access and resource control within our application.
 
-<a id="frontend"></a>
+<p align="right">(<a href="#readme-top">Back to top</a>)</p>
+
+<div id="frontend"></div>
 
 ## Frontend Overview (Expo & Gemini AI)
 
@@ -75,7 +81,9 @@ npx expo start
 
 ### Through Gemini we are also able to use our User Item database to generate unique step-by-step recipes in order to prevent Food Waste.
 
-<a id="backend"></a>
+<p align="right">(<a href="#readme-top">Back to top</a>)</p>
+
+<div id="backend"></div>
 
 ## Backend Overview (Node.js)
 
@@ -102,3 +110,5 @@ npx expo start
 - Parameters (request, response)
 - Grab all items from User Database, including item qualities, and return them in an Array of json.
 - Alternatively grab just an Array of strings for item titles.
+
+<p align="right">(<a href="#readme-top">Back to top</a>)</p>
