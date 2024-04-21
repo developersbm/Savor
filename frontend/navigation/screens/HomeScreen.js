@@ -1,75 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Linking } from 'react-native';
+import axios from 'axios'; // Make sure axios is installed
 
 export default function HomeScreen({ navigation }) {
+    const [products, setProducts] = useState([]);
 
-    const exampleImage = "https://i5.walmartimages.com/asr/a308e2f8-68d9-46fe-aab3-87de3f09e6d4_1.dc3154bdb9655e531ae9f414af2a8e5e.png?odnHeight=450&odnWidth=450&odnBg=ffffff";
-    const [categories, setCategories] = useState([
-        { name: "Pantry", products: [
-            { name: "Cookies", category: "Sweets", image: exampleImage, link: "cookie_link_url" },
-            { name: "Chips", category: "Snacks", image:exampleImage, link: "chips_link_url" }
-        ] },
-        { name: "Freezer", products: [
-            { name: "Frozen berries", category: "Frozen Fruits", image: exampleImage, link: "berries_link_url" }
-        ] },
-        { name: "Fridge", products: [
-            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
-            { name: "Eggs", category: "Dairy", image: exampleImage, link: "eggs_link_url" },
-            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
-            { name: "Milk", category: "Dairy", image: exampleImage, link: "milk_link_url" },
-        ] }
-    ]);
-    const [activeCategory, setActiveCategory] = useState(categories[0].name);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/getItems');
+                
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const openLink = (link) => {
         Linking.openURL(link);
     };
 
-    const renderCards = () => {
-        const activeCategoryProducts = categories.find(category => category.name === activeCategory).products;
-        return activeCategoryProducts.map((product, index) => {
-            return (
-                <TouchableOpacity key={index} style={styles.card} onPress={() => openLink(product.link)}>
-                    <Image source={{ uri: product.image }} style={styles.cardImage} />
-                    <View style={styles.cardInfo}>
-                        <Text style={styles.cardText}>{product.name}</Text>
-                        <Text style={styles.cardCategory}>{product.category}</Text>
-                    </View>
-                </TouchableOpacity>
-            );
-        });
-    };
-
-
     return (
-        <View>
-            <View style={styles.category}>
-                <Text style={styles.categoryTitle}>Categories</Text>
-                <ScrollView 
-                    horizontal
-                    contentContainerStyle={styles.categoryContainer}
-                    showsHorizontalScrollIndicator={false}
-                >
-                    {categories.map((category, index) => {
-                        const isActive = category.name === activeCategory;
-                        return (
-                            <TouchableOpacity
-                                key={index}
-                                onPress={() => setActiveCategory(category.name)}
-                                style={[styles.categoryItem, isActive && styles.activeCategoryItem]}
-                            >
-                                <Text style={styles.categoryText}>{category.name}</Text>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </ScrollView>
-            </View>
-
-            <View style={styles.container}>
-                <View style={styles.section}>
-                    {renderCards()}
-                </View>
-            </View>
+        <View style={styles.container}>
+            <Text style={styles.screenTitle}>Products</Text>
+            <ScrollView style={styles.scrollView}>
+                {products.map((product, index) => (
+                    <TouchableOpacity key={index} style={styles.card} onPress={() => openLink(product.Img)}>
+                        <Image source={{ uri: product.Img }} style={styles.cardImage} />
+                        <View style={styles.cardInfo}>
+                            <Text style={styles.cardText}>{product.Title}</Text>
+                            <Text style={styles.cardCategory}>{product.Category}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
         </View>
     );
 }
@@ -77,68 +44,43 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 20,
+        justifyContent: 'center',
     },
-    section: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        flexWrap: 'wrap',
+    scrollView: {
         marginTop: 20,
     },
     card: {
-        width: '45%',
         backgroundColor: '#fff',
-        marginBottom: 20,
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        alignItems: 'center',
-        height: 260,
+        padding: 10,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3,
     },
     cardImage: {
         width: '100%',
         height: 200,
+        borderRadius: 10,
     },
     cardInfo: {
         padding: 10,
-        width: '100%',
-        alignItems: 'center',
     },
     cardText: {
         fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center',
     },
     cardCategory: {
         fontSize: 14,
-        color: 'gray',
+        color: '#666',
+    },
+    screenTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
         textAlign: 'center',
-    },
-    category: {
-        flexDirection: 'column',
         marginBottom: 20,
-    },
-    categoryTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginLeft: 10,
-        marginBottom: 10,
-    },
-    categoryContainer: {
-        paddingLeft: 10,
-    },
-    categoryItem: {
-        marginRight: 8,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#ddd',
-    },
-    activeCategoryItem: {
-        backgroundColor: '#4CAF50',
-    },
-    categoryText: {
-        fontSize: 16,
-        fontWeight: 'bold',
     },
 });
