@@ -19,7 +19,7 @@ export default function HomeScreen({ navigation }) {
 
         fetchData();
 
-        const interval = setInterval(fetchData, 30000);
+        const interval = setInterval(fetchData, 1000);
 
         return () => clearInterval(interval);
     }, []);
@@ -72,7 +72,7 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.modalView}>
                         <Image source={{ uri: currentProduct?.Img }} style={styles.modalImage} />
                         <Text style={styles.modalText}>Title: {currentProduct?.Title}</Text>
-                        <Text style={styles.modalText}>Expiration: {currentProduct?.Expiration || 'N/A'}</Text>
+                        <Text style={styles.modalText}>Expiration: {currentProduct?.Expiration + " days" || 'N/A'}</Text>
                         <TouchableOpacity
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}
