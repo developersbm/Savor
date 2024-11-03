@@ -1,6 +1,6 @@
 <div id = "readme-top"></div>
 
-# Savor (LAHacks 2024)
+# Savor (LAHacks 2024) 
 
 ### Savor is an AI recipe-generating app, leveraging the use of Gemini AI, Firebase, and React Native to build an application that promotes eco-friendliness and prevent food waste anywhere, anytime.
 
